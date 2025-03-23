@@ -24,9 +24,13 @@ use Symfony\Component\Validator\Constraints as Assert;
         processor: UserPasswordHasher::class,
     ),
     new Delete(
-        processor: UserPasswordHasher::class,
+        security: "object == user or is_granted('ROLE_ADMIN')",
+        securityMessage: "Vous ne pouvez supprimer que votre propre compte, sauf si vous êtes administrateur."
     ),
-    new Post(processor: UserPasswordHasher::class)
+    new Post(
+        processor: UserPasswordHasher::class,
+        uriTemplate: '/register'
+    )
 ])]
 class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
