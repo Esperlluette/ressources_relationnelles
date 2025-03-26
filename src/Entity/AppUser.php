@@ -21,6 +21,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(operations: [
     new Get(normalizationContext: ['groups' => ['public']]),
     new Patch(
+        security: "object == user or is_granted('ROLE_ADMIN')",
+        securityMessage: "Vous ne pouvez modifier que votre propre compte, sauf si vous êtes administrateur.",
         processor: UserPasswordHasher::class,
     ),
     new Delete(
