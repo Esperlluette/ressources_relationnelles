@@ -19,15 +19,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: AppUserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(operations: [
-    new Get(normalizationContext: ['groups' => ['public']]),
+    new Get(normalizationContext: ['groups' => ['public']],
+    uriTemplate: "/user/{id}"),
     new Patch(
         security: "object == user or is_granted('ROLE_ADMIN')",
         securityMessage: "Vous ne pouvez modifier que votre propre compte, sauf si vous êtes administrateur.",
+        uriTemplate :"/user/{id}",
         processor: UserPasswordHasher::class,
     ),
     new Delete(
         security: "object == user or is_granted('ROLE_ADMIN')",
-        securityMessage: "Vous ne pouvez supprimer que votre propre compte, sauf si vous êtes administrateur."
+        securityMessage: "Vous ne pouvez supprimer que votre propre compte, sauf si vous êtes administrateur.",
+        uriTemplate :"/user/{id}",
     ),
     new Post(
         processor: UserPasswordHasher::class,
