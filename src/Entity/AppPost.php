@@ -15,11 +15,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ApiResource(operations: [
     new Get(
+        normalizationContext: ['groups' => ['post:read']],
         uriTemplate: "/post/{id}",
     ),
     new Patch(
         security: "object == user or is_granted('ROLE_ADMIN')",
         securityMessage : "Vous ne pouvez pas modifier le post si vous n'êtes pas administrateur.",
+        denormalizationContext: ['groups' => ['post:update']],
         uriTemplate :"/post/{id}",
     ),
     new Delete(
@@ -28,8 +30,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         uriTemplate :"/post/{id}",
     ),
     new Post(
-        security: "object == user",
+        security: "is_granted('ROLE_USER')",
         securityMessage : "Vous ne pouvez pas publier le post si vous n'êtes pas connecté.",
+        denormalizationContext: ['groups' => ['post:create']],
         uriTemplate :"/post",
     )
 ])]
@@ -39,27 +42,32 @@ class AppPost
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups("private")]
+    #[Groups(['post:update', 'post:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['post:create', 'post:update'])]
+    #[Groups(['post:create', 'post:update', 'post:read'])]
     private ?string $body = null;
 
     #[ORM\Column(type: Types::BLOB)]
-    #[Groups(['post:create', 'post:update'])]
+    #[Groups(['post:create', 'post:update', 'post:read'])]
     private $media_data = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['post:create', 'post:update'])]
+    #[Groups(['post:create', 'post:update', 'post:read'])]
     private ?string $media_type = null;
 
-    //#[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['post:read'])]
     private ?AppUser $id_appUser = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['post:read'])]
     private ?\DateTimeInterface $date_created = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['post:create', 'post:update', 'post:read'])]
+    private ?string $title = null;
 
     public function getId(): ?int
     {
@@ -129,6 +137,18 @@ class AppPost
     public function setDateCreated(\DateTimeInterface $date_created): static
     {
         $this->date_created = $date_created;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }

@@ -40,6 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         uriTemplate: '/register',
     )
 ])]
+
 class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -75,15 +76,9 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
 
     private ?string $name = null;
 
-    /**
-     * @var Collection<int, Community>
-     */
-    #[ORM\OneToMany(targetEntity: Community::class, mappedBy: 'user_id', orphanRemoval: true)]
-    private Collection $communities;
-
     public function __construct()
     {
-        $this->communities = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -99,7 +94,6 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -180,36 +174,6 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Community>
-     */
-    public function getCommunities(): Collection
-    {
-        return $this->communities;
-    }
-
-    public function addCommunity(Community $community): static
-    {
-        if (!$this->communities->contains($community)) {
-            $this->communities->add($community);
-            $community->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommunity(Community $community): static
-    {
-        if ($this->communities->removeElement($community)) {
-            // set the owning side to null (unless already changed)
-            if ($community->getUserId() === $this) {
-                $community->setUserId(null);
-            }
-        }
 
         return $this;
     }
