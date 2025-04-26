@@ -49,11 +49,11 @@ class AppPost
     #[Groups(['post:create', 'post:update', 'post:read'])]
     private ?string $body = null;
 
-    #[ORM\Column(type: Types::BLOB)]
+    #[ORM\Column(type: Types::BLOB, nullable: true)]
     #[Groups(['post:create', 'post:update', 'post:read'])]
     private $media_data = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['post:create', 'post:update', 'post:read'])]
     private ?string $media_type = null;
 
@@ -62,7 +62,7 @@ class AppPost
     private ?AppUser $id_appUser = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['post:read'])]
+    #[Groups(['post:create','post:read'])]
     private ?\DateTimeInterface $date_created = null;
 
     #[ORM\Column(length: 255, nullable: true)]
