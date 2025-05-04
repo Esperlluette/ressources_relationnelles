@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\AppUserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
@@ -70,6 +71,16 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     #[Groups("public")]
     private ?string $name = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $acct_created = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank]
+    #[Assert\LessThanOrEqual(
+        value: 'today -13 years',
+        message: 'Tu dois avoir au moins 13 ans.'
+    )]    private ?\DateTimeInterface $birth_date = null;
 
     public function getId(): ?int
     {
@@ -165,6 +176,30 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getAcctCreated(): ?\DateTimeInterface
+    {
+        return $this->acct_created;
+    }
+
+    public function setAcctCreated(\DateTimeInterface $acct_created): static
+    {
+        $this->acct_created = $acct_created;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birth_date;
+    }
+
+    public function setBirthDate(\DateTimeInterface $birth_date): static
+    {
+        $this->birth_date = $birth_date;
 
         return $this;
     }

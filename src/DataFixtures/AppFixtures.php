@@ -18,6 +18,8 @@ class AppFixtures extends Fixture
             $user->setEmail('test' . $i . '@test.com');
             $user->setPassword(password_hash('123456', PASSWORD_DEFAULT));
             $user->setRoles(['ROLE_USER']);
+            $user->setBirthDate(new \DateTimeImmutable('2004-05-04'));     
+            $user->setAcctCreated(new \DateTimeImmutable('now')); 
             $manager->persist($user);
         }
 
@@ -31,6 +33,8 @@ class AppFixtures extends Fixture
         $user->setEmail('Test@user.fr');
         $user->setRoles(['ROLE_TEST']);
         $user->setPassword(password_hash('Test', PASSWORD_DEFAULT));
+        $user->setBirthDate(new \DateTimeImmutable('2004-05-04'));     
+        $user->setAcctCreated(new \DateTimeImmutable('now')); 
         $manager->persist($user);
     }
 
@@ -41,6 +45,8 @@ class AppFixtures extends Fixture
         $user->setEmail('maxime@admin.com');
         $user->setRoles(['ROLE_ADMIN']);
         $user->setPassword(password_hash('123456', PASSWORD_DEFAULT));
+        $user->setBirthDate(new \DateTimeImmutable('2004-05-04'));     
+        $user->setAcctCreated(new \DateTimeImmutable('now')); 
         $manager->persist($user);
 
         $user = new User();
@@ -48,6 +54,8 @@ class AppFixtures extends Fixture
         $user->setEmail('loic@admin.com');
         $user->setRoles(['ROLE_ADMIN']);
         $user->setPassword(password_hash('123456', PASSWORD_DEFAULT));
+        $user->setBirthDate(new \DateTimeImmutable('2004-05-04'));     
+        $user->setAcctCreated(new \DateTimeImmutable('now')); 
         $manager->persist($user);
 
 
@@ -56,6 +64,8 @@ class AppFixtures extends Fixture
         $user->setEmail('jalian@admin.com');
         $user->setRoles(['ROLE_ADMIN']);
         $user->setPassword(password_hash('123456', PASSWORD_DEFAULT));
+        $user->setBirthDate(new \DateTimeImmutable('2004-05-04'));     
+        $user->setAcctCreated(new \DateTimeImmutable('now')); 
         $manager->persist($user);
     }
 }
