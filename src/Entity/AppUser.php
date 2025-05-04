@@ -35,9 +35,11 @@ use Symfony\Component\Validator\Constraints as Assert;
     ),
     new Post(
         processor: UserPasswordHasher::class,
-        uriTemplate: '/register'
+        denormalizationContext: ['groups' => ['user:create']],
+        uriTemplate: '/register',
     )
 ])]
+
 class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -47,21 +49,20 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups("private")]
+    #[Groups(['user:create', 'user:update', "private"])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups("private")]
+    #[Groups(['user:update', "public"])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
-    #[Groups("private")]
+    #[ORM\Column] 
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['user:create'])]
@@ -69,7 +70,9 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $plainPassword = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups("public")]
+    #[Assert\NotBlank(groups: ['user:create'])]
+    #[Groups(['user:create', 'user:update', "public"])]
+
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -95,7 +98,6 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
