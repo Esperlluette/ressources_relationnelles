@@ -17,9 +17,11 @@ class JWTCreatedListener
         // --- J'informe intelisense que $user est de type AppUser ---
         /** @var \App\Entity\AppUser $user */
 
+        $payload['id'] = $user->getId();
         $payload["username"] = $user->getName();
         $payload['email']    = $user->getUserIdentifier();
-
+        $payload['roles'] = $user->getRoles();
+ 
         $event->setData($payload);
     }
 }

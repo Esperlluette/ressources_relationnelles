@@ -57,13 +57,13 @@ class AppUser implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['user:create', 'user:update', "public"])]
+    #[Groups(['user:update', "public"])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column] 
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['user:create'])]
